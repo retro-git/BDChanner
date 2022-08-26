@@ -1,0 +1,11 @@
+{
+    "info": {
+        "name": "Searcher",
+        "authors": [{
+            "name": "syf"
+        }],
+        "version": "0.1.0",
+        "description": "Searcher"
+    },
+    "main": "index.js"
+}
