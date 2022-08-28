@@ -1,5 +1,5 @@
 module.exports = (Plugin, Api) => {
-    var http = require('http');
+    const https = require('https');
     const {DiscordSelectors, PluginUtilities, DOMTools} = Api;
     return class SendButton extends Plugin {
         onStart() {
@@ -17,7 +17,8 @@ module.exports = (Plugin, Api) => {
 
             var discrimElem = document.evaluate(`//span[text()='#']`, elem, null, XPathResult.ANY_TYPE, null).iterateNext();
             var discrim = discrimElem.innerText;
-            var url = "https://archived.moe/_/search/text/" + encodeURIComponent(elem.ariaLabel + discrim);
+            var name = elem.ariaLabel + discrim;
+            var url = "https://archived.moe/_/search/text/" + encodeURIComponent(name);
 
             const myButton = document.createElement("button");
             myButton.setAttribute("class", "search-button");
@@ -29,10 +30,6 @@ module.exports = (Plugin, Api) => {
                 var start = (process.platform == 'darwin'? 'open': process.platform == 'win32'? 'start': 'xdg-open');
                 require('child_process').exec(start + ' ' + url);
             });
-
-            // http.get
-
-            const https = require('https');
 
             https.get(url, res => {
               let data = [];
@@ -47,11 +44,16 @@ module.exports = (Plugin, Api) => {
               res.on('end', () => {
                 console.log('Response ended: ');
                 //console.log(Buffer.concat(data).toString());
-                if (Buffer.concat(data).toString().includes("No results found")) {
+                let data_string = Buffer.concat(data).toString();
+                if (data_string.includes("No results found")) {
                     myButton.textContent = "No results found";
-                    return;
                 }
-                myButton.textContent = "Results found!";
+                else if (data_string.split(name).length - 1 < 6){ 
+                    myButton.textContent = "No direct match";
+                }
+                else {
+                    myButton.textContent = "Results found!";
+                }
               });
             }).on('error', err => {
               console.log('Error: ', err.message);
@@ -68,7 +70,7 @@ module.exports = (Plugin, Api) => {
             // if (e.addedNodes[0].querySelector(DiscordSelectors.Textarea.inner)) {
             //     this.addButton(e.addedNodes[0]);
             // }
-            console.log(document.querySelector(DiscordSelectors.UserPopout.userPopout));
+            //console.log(document.querySelector(DiscordSelectors.UserPopout.userPopout));
             if (document.querySelector(DiscordSelectors.UserPopout.userPopout)) { 
                 this.addButton(document.querySelector(DiscordSelectors.UserPopout.userPopout));
             }
