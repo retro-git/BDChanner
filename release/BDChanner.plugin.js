@@ -85,7 +85,6 @@ module.exports = !global.ZeresPluginLibrary ? Dummy : (([Plugin, Api]) => {
 
             var discrimElem = document.evaluate(`//span[text()='#']`, elem, null, XPathResult.ANY_TYPE, null).iterateNext();
             var discrim = discrimElem.innerText;
-            discrim = "#6453";
             var name = elem.ariaLabel;
             var name_and_discrim = elem.ariaLabel + discrim;
             var url = "https://archived.moe/_/search/text/" + encodeURIComponent(name_and_discrim);
