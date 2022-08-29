@@ -35,7 +35,6 @@ module.exports = (Plugin, Api) => {
             var discrim = discrimElem.innerText;
             var name = elem.ariaLabel;
             var name_and_discrim = elem.ariaLabel + discrim;
-            //var url = "https://archived.moe/_/search/text/" + encodeURIComponent(name_and_discrim);
             var url = "https://archived.moe/_/search/text/" + encodeURIComponent(name_and_discrim);
             const headers = {
                 method: "GET",
@@ -74,16 +73,10 @@ module.exports = (Plugin, Api) => {
                 var start = (process.platform == 'darwin'? 'open': process.platform == 'win32'? 'start': 'xdg-open');
                 require('child_process').exec(start + ' ' + url);
             });
-            //discrimElem.append(myButton);
-            //discrimElem.parentNode.insertBefore(myButton, discrimElem);
         }
 
         observer(e) {
             if (!e.addedNodes.length || !(e.addedNodes[0] instanceof Element)) return;
-            // if (e.addedNodes[0].querySelector(DiscordSelectors.Textarea.inner)) {
-            //     this.addButton(e.addedNodes[0]);
-            // }
-            //console.log(document.querySelector(DiscordSelectors.UserPopout.userPopout));
             if (document.querySelector(DiscordSelectors.UserPopout.userPopout)) { 
                 this.addButton(document.querySelector(DiscordSelectors.UserPopout.userPopout));
             }
