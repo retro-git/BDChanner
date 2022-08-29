@@ -12,13 +12,34 @@ module.exports = (Plugin, Api) => {
             if (button) button.remove();
         }
 
-        addButton(elem) {
+        fetch = (url) => {
+            return new Promise((resolve, reject) => {
+            https.get(url, (res) => {
+                    let data = [];
+
+                    res.on('data', chunk => {
+                        data.push(chunk);
+                    });
+
+                    res.on('end', () => {
+                    resolve(Buffer.concat(data).toString()); 
+                    });
+                })
+            })
+        }
+
+        async addButton(elem) {
             if (elem.querySelector(".search-button")) return;
 
             var discrimElem = document.evaluate(`//span[text()='#']`, elem, null, XPathResult.ANY_TYPE, null).iterateNext();
             var discrim = discrimElem.innerText;
-            var name = elem.ariaLabel + discrim;
-            var url = "https://archived.moe/_/search/text/" + encodeURIComponent(name);
+            var name = elem.ariaLabel;
+            var name_and_discrim = elem.ariaLabel + discrim;
+            //var url = "https://archived.moe/_/search/text/" + encodeURIComponent(name_and_discrim);
+            var url = "https://archived.moe/_/search/text/" + encodeURIComponent(name_and_discrim);
+            const headers = {
+                method: "GET",
+            }
 
             const myButton = document.createElement("button");
             myButton.setAttribute("class", "search-button");
@@ -26,41 +47,33 @@ module.exports = (Plugin, Api) => {
             myButton.style.color = "white";
             myButton.style.backgroundColor = "transparent";
             myButton.style.outlineColor = "black";
+
+            const root = document.querySelector(DiscordSelectors.UserPopout.userPopout);
+            root.append(myButton);
+
+            let res = await this.fetch(url, headers);
+
+            if (res.split(name_and_discrim).length - 1 >= 6) {
+                myButton.textContent = "Direct match found!";
+            }
+            else {
+                url = "https://archived.moe/_/search/text/" + encodeURIComponent(name);
+                res = await this.fetch(url, headers);
+                if (res.includes("No results found")) {
+                    myButton.textContent = "No results found";
+                }
+                else if (res.split(name).length - 1 >= 6) {
+                    myButton.textContent = "Results found - nonmatching discriminator";
+                }
+                else {
+                    myButton.textContent = "Results found - no direct match";
+                }
+            }
+
             myButton.addEventListener("click", () => {
                 var start = (process.platform == 'darwin'? 'open': process.platform == 'win32'? 'start': 'xdg-open');
                 require('child_process').exec(start + ' ' + url);
             });
-
-            https.get(url, res => {
-              let data = [];
-              const headerDate = res.headers && res.headers.date ? res.headers.date : 'no response date';
-              console.log('Status Code:', res.statusCode);
-              console.log('Date in Response header:', headerDate);
-            
-              res.on('data', chunk => {
-                data.push(chunk);
-              });
-            
-              res.on('end', () => {
-                console.log('Response ended: ');
-                //console.log(Buffer.concat(data).toString());
-                let data_string = Buffer.concat(data).toString();
-                if (data_string.includes("No results found")) {
-                    myButton.textContent = "No results found";
-                }
-                else if (data_string.split(name).length - 1 < 6){ 
-                    myButton.textContent = "No direct match";
-                }
-                else {
-                    myButton.textContent = "Results found!";
-                }
-              });
-            }).on('error', err => {
-              console.log('Error: ', err.message);
-            });
-
-            const root = document.querySelector(DiscordSelectors.UserPopout.userPopout);
-            root.append(myButton);
             //discrimElem.append(myButton);
             //discrimElem.parentNode.insertBefore(myButton, discrimElem);
         }
