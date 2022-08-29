@@ -58,10 +58,12 @@ module.exports = (Plugin, Api) => {
             else {
                 url = "https://archived.moe/_/search/text/" + encodeURIComponent(name);
                 res = await this.fetch(url, headers);
+
+                //console.log(res.split(new RegExp(`${name}#[0-9]{4}`, "i")).length - 1);
                 if (res.includes("No results found")) {
                     myButton.textContent = "No results found";
                 }
-                else if (res.split(name).length - 1 >= 6) {
+                else if (res.split(new RegExp(`${name}#[0-9]{4}`, "i")).length - 1 > 0) {
                     myButton.textContent = "Results found - nonmatching discriminator";
                 }
                 else {
