@@ -1,8 +1,10 @@
 /**
- * @name Channer
+ * @name BDChanner
  * @description Auto-search for users on archived.moe by clicking user profile
  * @version 0.1.0
  * @author boosh
+ * @website https://github.com/retro-git/BDChanner
+ * @source https://github.com/retro-git/BDChanner/blob/master/release/BDChanner.plugin.js
  */
 /*@cc_on
 @if (@_jscript)
@@ -27,7 +29,7 @@
     WScript.Quit();
 
 @else@*/
-const config = {"info":{"name":"Channer","authors":[{"name":"boosh","github_username":"retro-git"}],"version":"0.1.0","description":"Auto-search for users on archived.moe by clicking user profile","github":"","github_raw":""},"main":"index.js"};
+const config = {"info":{"name":"BDChanner","authors":[{"name":"boosh","github_username":"retro-git"}],"version":"0.1.0","description":"Auto-search for users on archived.moe by clicking user profile","github":"https://github.com/retro-git/BDChanner","github_raw":"https://github.com/retro-git/BDChanner/blob/master/release/BDChanner.plugin.js"},"main":"index.js"};
 class Dummy {
     constructor() {this._config = config;}
     start() {}
