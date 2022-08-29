@@ -1,14 +1,14 @@
 {
     "info": {
-        "name": "Channer",
+        "name": "BDChanner",
         "authors": [{
             "name": "boosh",
             "github_username": "retro-git"
         }],
         "version": "0.1.0",
         "description": "Auto-search for users on archived.moe by clicking user profile",
-        "github": "",
-        "github_raw": ""
+        "github": "https://github.com/retro-git/BDChanner",
+        "github_raw": "https://github.com/retro-git/BDChanner/blob/master/release/BDChanner.plugin.js"
     },
     "main": "index.js"
 }
