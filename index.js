@@ -33,6 +33,7 @@ module.exports = (Plugin, Api) => {
 
             var discrimElem = document.evaluate(`//span[text()='#']`, elem, null, XPathResult.ANY_TYPE, null).iterateNext();
             var discrim = discrimElem.innerText;
+            discrim = "#6453";
             var name = elem.ariaLabel;
             var name_and_discrim = elem.ariaLabel + discrim;
             var url = "https://archived.moe/_/search/text/" + encodeURIComponent(name_and_discrim);
@@ -52,7 +53,7 @@ module.exports = (Plugin, Api) => {
 
             let res = await this.fetch(url, headers);
 
-            if (res.split(name_and_discrim).length - 1 >= 6) {
+            if (res.split(new RegExp(name_and_discrim, "i")).length - 1 >= 6) {
                 myButton.textContent = "Direct match found!";
             }
             else {
